@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        mamba: [latest, 1.1.0, 1.0.0]
+        mamba: [latest, 1.4.0]
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -36,14 +36,16 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/micromamba:${{ matrix.mamba }}
           build-args: |
             MAMBA_VERSION=${{ matrix.mamba }}
-          #
-  # Build CUDA image
+
+  # Build CUDA image for Ubuntu 20.04
   build-cuda:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cuda: [11.2.2, 11.3.1, 11.4.3, 11.6.2, 11.8.0, 12.0.0]
+        mamba: [latest, 1.4.0]
+        cuda: [12.0.0, 12.1.0]
         flavor: [runtime, devel]
+        ubuntu: [20.04, 22.04]
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -66,7 +68,9 @@ jobs:
           push: true
           context: "./"
           file: "./Dockerfile.cuda"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/micromamba:${{ env.cuda }}-${{ matrix.flavor }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/micromamba:${{ matrix.mamba }}-${{ env.cuda }}-${{ matrix.flavor }}-ubuntu${{ matrix.ubuntu }}
           build-args: |
+            MAMBA_VERSION=${{ matrix.mamba }}
             CUDA=${{ matrix.cuda }}
             FLAVOR=${{ matrix.flavor }}
+            UBUNTU=${{ matrix.ubuntu }}

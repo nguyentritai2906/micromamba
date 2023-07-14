@@ -1,7 +1,8 @@
 ARG CUDA=11.8.0
 ARG FLAVOR=runtime
+ARG UBUNTU_VERSION=20.04
 
-FROM ubuntu:20.04 as PREBUILD
+FROM ubuntu:${UBUNTU_VERSION} as PREBUILD
 # Mamba version
 ARG MAMBA_VERSION=1.1.0
 # Prevents errors in a pipeline from being masked
@@ -20,7 +21,7 @@ RUN test "$TARGETARCH" = 'amd64' && export ARCH='64'; \
     tar -xj -C "/tmp" "bin/micromamba"
 
 # Build from Nvidia's image
-FROM nvidia/cuda:${CUDA}-cudnn8-${FLAVOR}-ubuntu20.04
+FROM nvidia/cuda:${CUDA}-cudnn8-${FLAVOR}-ubuntu${UBUNTU_VERSION}
 # Build arguments
 ARG MAMBA_USER=mambauser
 ARG MAMBA_USER_ID=1000
