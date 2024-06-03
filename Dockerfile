@@ -19,8 +19,8 @@ RUN test "$TARGETARCH" = 'amd64' && export ARCH='64'; \
 FROM ubuntu:latest
 # Build arguments
 ARG MAMBA_USER=mambauser
-ARG MAMBA_USER_ID=1000
-ARG MAMBA_USER_GID=1000
+ARG MAMBA_USER_ID=1001
+ARG MAMBA_USER_GID=1001
 # Build environments
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV ENV_NAME="base"
